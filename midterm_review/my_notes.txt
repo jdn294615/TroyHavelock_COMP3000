@@ -1,0 +1,30 @@
+Comands:
+
+    strace      - prints all the system calls that are made when we run a process
+    df          - we can see the filesystems that are mounted
+    pstree      - prints a tree view of the currently running processes
+    
+
+System Calls/Function Calls:
+
+    getpid()    - returns the process id of the current process
+    getppid()   - returns the process id of the parent process
+    fork()      - clones a child process and continues to run the process from the same spot,
+                  returns 0 if it is the child process, returns > 0 if it is the parent 
+                  process, and returns < 0 if the fork failed
+                  
+    sleep()     - causes the current process to do nothing for the specified amount of time
+    wait()      - waits until one of its children has terminated and returns the status
+    execve()    - run another binary
+    sigaction() - allows us to handle signals
+    
+    
+Notes:
+
+    - every process must have a currently running parent
+    - if a parent process dies then the kernel collects the return value and assigns a new
+      parent to the child
+      
+    - argc = arg count, argv[] = the actual array of arguments
+    
+    

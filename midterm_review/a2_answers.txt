@@ -1,0 +1,50 @@
+COMP 3000 Fall 2017
+Assignment 2 Solutions
+
+1. [1] Why does a different version of stat(), lstat(), exist that treats symbolic links differently? Why isn't a different version needed for hard links?
+
+A: lstat is necessary because by default stat doesn't follow symbolic links.  Programs that don't specifically want to manage symbolic links should use lstat; otherwise programs should use stat.  There is no special version for hard links because regular files that aren't symbolic links are all hard links.  (Every regular file has one hard link, its entry in its directory.  Additional directory entries for the inode can be created using ln, those are "hard links."
+
+2. [1] How can you modify 3000pc so the producer stops producing once it fills the buffer?
+
+A: Delete line 231, the call to wakeup_producer().  If this line is missing, the producer will not be woken up once it fills the queue.  (Outputting only QUEUESIZE words, rather than event_count words, by changing the test in line 254 is an *incorrect* solution, as is possible for the producer to output QUEUESIZE words without filling the buffer - the consumer just has to keep up.)
+
+3. [1] Under what circumstances is fill_rand_buffer() called in 3000random?
+
+A: fill_rand_buffer() is called first when initializing r (in system_rand_init()) and then whenever r is empty (r->current < 0).
+
+4. [1] If the two signal handling functions in 3000pc were replaced by one function, would there be any significant loss of functionality? Briefly explain.
+
+A: No, the only difference between them is in the messages they output.  If these messages were made generic (or conditional based upon a flag of some sort) the two functions could be replaced by one.
+
+5.  [2] How could you modify 3000test.c so it can report on whether two device files are equal without actually accessing the underlying devices? Specify the changes you would make to 3000test.c rather than doing this from scratch.
+
+A: stat() both files, producing statbuf1 and statbuf2.  (These filenames can be given on the command line.)  Test whether both are block or character devices using S_ISCHR and S_ISBLK macros.  If they are both a character or a block device, then compare their st_dev fields.  If they are equal, then they are device files referring to the same device.
+
+6. [2] Does the MAP_SHARED flag on line 60 of 3000test.c (inside the call to mmap) make a significant difference in its execution? Specifically, what happens when you remove it or changed it to MAP_PRIVATE? Why?
+
+A: Changing MAP_SHARED to MAP_PRIVATE doesn't matter in this case because of PROT_READ - the map is read only.  If two processes map the same file into memory they will see the same data either way.
+
+7. [2] When a file is mmap'd into memory, when is its contents loaded from disk? How can you verify this using 3000test?
+
+A: If the file is large, parts will only be loaded from disk as it is accessed; however, small portions of the file may be read into memory when the file is opened.  You can tell how much is loaded into memory and when by observing the resident size (RSS) of the process - the bigger this is, the more of the file has been loaded.  To test this, run 3000test with a large file (say, 1G) after potentially adding sleep statements into the loop in lines 66-69 (to make it run slowly).  As it accesses more of the file, run "ps u" (or "ps aux | grep 300test") and observe changes in the RSS value.
+
+8. [2] What is one way simple way you can modify 3000pc so the consumer consumes as the producer produces, i.e., the producer and the consumer move essentially in lock step?  Your modification should not involve sleeping by either the producer or the consumer.  Why does your change work?  (To do this precisely is hard; to do this approximately involves a change to one line.  The approximate solution is sufficient.)
+
+A: Change QUEUESIZE to be 2 in line 20.  They will run in lock step because as one consumes the other produces.  Note that you need a queue size of two so they can each work independently on a queue entry; if you have a queue size of 1 they have to take turns (no parallelism).  Giving an answer of 1 is acceptable so long as this behavior is explained.
+
+9. [2] Which is faster, /dev/urandom or /dev/random? What evidence do you have for this difference based on code that you ran (3000random or other programs)?
+
+A: /dev/urandom is much faster compared to /dev/random.  3000random with /dev/urandom produces numbers at a steady rate; 3000random with /dev/random quickly runs out of random numbers and has trouble filling its buffer.  So with /dev/random, the only way to get data reliably is to wait until random numbers become available, and that wait time is indeterminate.
+
+10. [2] How does the behavior of 3000pc change if you delete lines 149 and 152 (the if statement in wakeup_consumer())? Why? (Explain what the program does after this change and why it may be problematic.)
+
+A: After this change the program will log you out, killing all of your processes (in my experimentation).  I'm not sure exactly why this happens; what I do know is that the producer now is sending a signal to the consumer process on every iteration, which means it is getting way more signals than it can process in a timely fashion.  Clearly sending signals too fast causes problems!
+
+11. [2] What happens if you delete line 231 (the call to wakeup_producer()) in 3000pc? Why?
+
+A: If you delete this line, you only get a small number of words (probably 32, but maybe some more) before the output freezes.  This happens because the producer has gone to sleep (when it filled the queue) but it will never be woken up because the consumer no longer calls wakeup_producer() to send a signal to the producer.
+
+12. [2] How does the behavior of the program change if you change QUEUESIZE to 8? What about 128?
+    
+A: The behavior of the program does not significantly change with the values of 8 and 128 for QUEUESIZE.  The buffer fills up faster with a queue size of 8 and slower with 128, and this changes things for small counts (e.g., with QUEUESIZE of 128, counts less than 128 will generally result in the producer finishing before the consumer does any work).  For longer counts, however, the steady-state behavior is the same as what matters then is the relative speed of the consumer versus the producer, not the size of the queue.

@@ -1,0 +1,28 @@
+#########################
+#                       #
+#   Troy Havelock       #
+#   100964083           #
+#   COMP 3000           #
+#   Tutorial 4          #
+#                       #
+#########################
+
+
+    1. The producer signals the consumer when it queues a word (queue_word()), and the consumer
+       signals the producer when it gets a word (get_next_word()).
+       
+    2. 
+    
+    3. The consumer doesn't receive any of the words from the producer.
+    
+    4. Same as before.
+    
+    5. The producer finishes before the consumer.
+    
+    6. All the output gets printed at once when the producer is done.
+    
+    7. Same thing as before.
+    
+    8. Everything outputs very quickly.
+    
+    9. It gets its random numbers from /dev/urandom

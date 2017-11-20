@@ -1,0 +1,79 @@
+COMP 3000 Assignment 2
+Troy Havelock
+100964083
+October 26, 2017
+
+=========================================================
+ANSWERS:
+
+    1.  stat() is different from lstat() because stat() will return information about a file that a 
+        symbolic link points to, where as lstat() will return information about the actual symbolic 
+        link. Another version is not needed for a hard link, because a hard link creates a new file
+        that points to the same inode as a file, so this would make use of the stat() function.
+       
+            - References: stat 2 man page, lecture 7 notes
+            
+    2.  In the queue_word() function, you would check to see if there is room on the queue. If there
+        is not enough room, then queue_word() would return -1 to producer() function. The producer()
+        function would need to be modified to check the return value of the queue_word() function,
+        and stop until the queue frees up some space.
+       
+    3.  It is called when the program is initialized. Also it will be called if the program calls 
+        system_rand, which returns a random number with max specified, if the rand_state structure
+        current value is less than 0.
+       
+    4.  Since the signal handlers are almost exactly the same, it would be okay to use the same signal
+        handler. What you could do is have a global variable representing weather the process is the
+        consumer or the producer, and set it accordingly when the program forks. When the signal
+        handler is called, you could check this variable to see if the process is the consumer or
+        producer and print out the appropriate message to the shell.
+       
+    5.  First, you would need to modify the 3000test.c so that it can take in two files. You would need
+        to run stat() on the second file, just like we did with the original one file implementation.
+        We would store the information in another stat structure. We would add another if statement
+        after the first if statement that checks if the first file is a regular file. The new if 
+        statement will use the S_ISCHR() function to check if the two files are device files, if they
+        are, then inside the if statement will be another check to see if the inode number matches.
+            
+            - References: stat 2 man page
+       
+    6.  It will not make a significant difference in execution because we open the file in a read only
+        format. When we open it in MAP_SHARED, any changes we make to the file will be committed back 
+        to the original file that we mapped from. If we were to change this to MAP_PRIVATE, the 
+        contents would not be committed back to the original. However, since we are only opening the
+        file in read only mode, it won't make much of a difference.
+       
+            - References: mmap man page
+       
+    7.  Contents are read from the disk on a call-by-need basis. Contents do no actually use physical 
+        RAM. This could be verified by putting sleep() calls in 3000test.c at before its mmap'ed and
+        while its accessing data, then when you run the program you monitor the virtual memory usage
+        with top.
+       
+            - References: mmap man page, https://en.wikipedia.org/wiki/Mmap
+            
+    8. 
+    
+    9.  /dev/random takes much longer to run. I ran 3000random with configurations for both /dev/random
+        and /dev/urandom with values 1000 100. /dev/urandom runs almost instantly, while I had to kill
+        /dev/random because it was taking so long. This makes sense because /dev/random is used for 
+        things that need very high level of randomness which will use blocking calls, while 
+        /dev/urandom does not need as high a level of randomness.
+            
+            - References: urandom man page
+    
+    10. When I implemented the specified changes, the VM logged out. This is because the check to see
+        if the consumer is waiting no longer happens. This can be dangerous because we are sending a 
+        kill signal to the consumer proccess ID. It is dangerous because the consumer proccess may not 
+        exist yet, so the kill signal will go to the parent proccess of the producer, which is the user.
+        This would explain why I was logged out.
+    
+    11. Nothing changes. 
+    
+    12. The producer may have to wait till consumer has consumed words before it can add more words to the
+        queue. Consumer will send a usr1 signal when there is space. 
+    
+    
+    
+    
+

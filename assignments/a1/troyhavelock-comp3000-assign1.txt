@@ -1,0 +1,75 @@
+COMP 3000 Assignment 1
+Troy Havelock
+100964083
+October 12, 2017
+
+=========================================================
+ANSWERS:
+
+    1. The "kill" system call is used to send signals
+        - Resources: Tutorial 2
+
+    2. fork() creates a child proccess where execve() can execute a program independently
+       of the parent process. This is because, incase there is an error from the child 
+       proccess, the parent proccess will not die.
+        - Resources: Tutorial 2, execve() man pages
+
+    3. A dynamically-linked program would use more memory (RAM) because they would have to
+       link the required libraries needed to execute, at run time.
+        - Resources: Lecture 6 Notes
+    
+    4. A SIGCHLD signal is sent out when a child process terminates. This would effect user space
+       programs because a parent proccess will not know when a child proccess is done, and thus will
+       not receive an exit status. 
+        - Resources: Lecture 5 notes, signal() man page 7, https://en.wikipedia.org/wiki/User_space
+
+    5. Environment variables are stored in the format key=value in the environment list. The command
+       line arguments are also key=value pairs. Both envp and argv are stored as an array of strings 
+       in the programs memory.
+        - Resources: Lecture 5 Notes, getenv() man page, execve() man page
+
+    6. No, a program does not make system calls to access environment variables. This is because
+       the environment variables are passed in as envp and exist in the program memory. This can
+       also be demonstrated when running strace on the "env" program, which lists all the environment
+       variables, there are no system calls to get the value of an environment variable.
+        - Resources: execve() man page
+
+    7. We are not really making a system call, rather, the function is a "wrapper" to the system call.
+       In the case of fork(), according to the man page, fork() is a wrapper function that actually
+       invokes a clone() system call.
+        - Resources: fork() man page
+
+    8. The parse_args() function takes in 4 parameters; buffer, args, args_size and nargs. The function
+       reads the buffer and parses it into arguments by using the strsep() function. It will parse arguments
+       that are seperated by ' ', '\t' and '\n' characters. It will then store these parsed string arguments
+       in the args variable and the number of args in nargs. Since the args and nargs variables are pass
+       by reference, these are return variables and what the output will be. The side effect is that the
+       buffer is limited by the arg_size passed, so that could mess up the arguments passed to the function.
+        - Resources: 3000shell.c from Tutorial 2, strsep() man page
+
+    9. Things get messed up when using the & because the child will not actually go to the background, so the
+       shell and the child process are both trying to interact with the user.
+
+    10. The system call that is used to list all the files in a directory is getdents(). According to its man
+        page, the system call "gets directory entries." According to the man page, the C library interface 
+        to make those system calls is readdir().
+         - Resources: getdents() man page, readdir() man page
+
+    11. Process <PID> exited with status 0. This is because the parent process is not waiting for the child
+        process to end, so the signal_handler catches the child proccess termination.
+         - Resources: wait() man page
+
+    12. According to the man page for read(), it has an errno for if a read() gets interupted by a signal. 
+        In the case of read(), it stops to handle the signal. restart_syscall() is a system call that 
+        restarts certain system calls that have been interrupted by a signal. It is only intended for use by 
+        the kernel.
+         - Resources: read() man page, restart_signal() man page
+
+    13. 3000shell could have a user defined signal (SIGUSR1 or SIGUSR2) that will indicate it needs to read 
+        the input from somewhere. The output from an external program could be redirected to a buffer file
+        which would be read by the 3000shell proccess when it receives the defined signal.
+    
+    
+    
+    
+

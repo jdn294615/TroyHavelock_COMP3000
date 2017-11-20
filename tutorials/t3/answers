@@ -1,0 +1,44 @@
+---------------------------------------------------
+-                                                 -
+- Tutorial 3                                      -
+- COMP 3000                                       -
+- Troy Havelock                                   -
+-                                                 -
+---------------------------------------------------
+
+    1. 
+        file:
+            File test.txt: 
+               inode 408039
+              length 292
+             a count 0
+
+        directory:
+            File test/: 
+               inode 420350
+              length 4096
+
+        sym link:
+            File test2.txt: 
+               inode 420416
+              length 141
+             a count 0
+
+        device:
+            File /dev/null: 
+               inode 8675
+              length 0
+
+    2. stat will give information about what a sym link is pointing
+       to, but lstat will give information about the link itself
+
+        sym link:
+            File test2.txt: 
+               inode 420452
+              length 14
+
+        same file:
+            File test/test2.txt: 
+               inode 420416
+              length 141
+             a count 0

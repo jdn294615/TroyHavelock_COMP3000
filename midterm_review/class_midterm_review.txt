@@ -1,0 +1,27 @@
+COMP3000 Midterm Review
+-----------------------
+
+- all short answer, some very short
+
+----- Questions from Assignment 1:
+- Question 13:
+    - First step is figuring out where we want to do this
+        - have to do it before the execve
+        - one place is before the fork
+        - another is the parent
+        - another is the child
+            - only makes sense to do it in the child process
+    - answer is in the child before the execve
+    - you would use dup2() system call
+
+----- Questions from Assignment 2:
+
+- Question 5:
+    - What does stat() return and what is the nature of the things you get back?
+    - inode struct also has a device id if its a special file, so could have just checked this
+    
+- Question 10:
+    - When we remove the lines, we generate a lot of signals very quickly, which is in general
+      a bad idea
+    - the con_pid is set to -1, so if we send kill to process -1, it will kill all the user 
+      processes

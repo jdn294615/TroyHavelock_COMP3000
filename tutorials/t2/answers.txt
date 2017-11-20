@@ -1,0 +1,16 @@
+==================================================================
+COMP 3000
+Tutorial 2
+Troy Havelock
+==================================================================
+
+    1. The input and output get fed through the COMP3000 shell, 
+       we get a notification from the shell when the program 
+       starts and when it finishes. This is identified by the 
+       pid
+
+    2. You can look at the pid that was printed and then kill
+       that process.
+
+    3. If the pid is equal to -1 then there is no process running
+       which means there is nothing to wait for.  

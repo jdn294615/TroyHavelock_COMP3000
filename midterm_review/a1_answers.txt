@@ -1,0 +1,68 @@
+COMP 3000 Fall 2017
+Assignment 1 Solutions
+
+1. [1] What system call is used to send signals?
+
+A: kill
+
+2. [1] Why are both fork and execve necessary for 3000shell to run programs?
+
+A: Fork is needed to create a new process, and execve is needed to load the program binary into the new process.
+
+3. [1] Dynamically-linked programs are smaller on disk than statically linked programs.  Which would you expect to use more memory (RAM) when running?  Why?
+
+A: Dynamically-linked programs inherently need more code because they must include the code to load libraries at runtime.  They also often load an entire library into memory rather just the functions needed by a program.  However, dynamically-linked libraries allow library code to be easily shared between processes.  Thus individually dynamically-linked binaries are bigger, but in aggregate they consume less memory. (1 point for understanding dynamic linking requires running code at runtime; 2 points for a coherent explanation even if it is incorrect due to not understanding virtual memory)
+
+4. [1] If you changed the kernel so it didn't generate SIGCHLD signals, how would the behavior of userspace programs change?
+
+A: Userspace programs would no longer be alerted to when their child processes terminate.  Unless they make wait() calls outside of a signal handler, they will never see the return value of their child processes and they will remain zombies.
+
+5. [2] In what format are environment variables stored?  What about command line arguments?
+
+A: Environment variables are stored as an array of pointers to null-terminated strings, with the array terminated by a null pointer.  Each string contains an environment variable and its value, with the two separated by an = (with no spaces).
+
+Command line arguments are the same as environment variables, except the strings are the individual command line arguments (rather than each being a key-value pair).
+
+6. [2] Does a program make a system call to get the value of an environment variable?  Why?
+
+A: No it does not make a system call, because environment variables are stored in process memory.  We access environment variables in the same way as any other data structure in a process's memory.
+
+7. [2] When we call a system call such as fork in C, we do so with what looks like a C function call.  Are we really making a function call?  Explain.
+
+A: Yes, we are making a normal function call to a library function.  That library function employs special compiler-specific code (often inline assembly) to generate the actual system call.
+
+8. [2] What does parse_args() do?  Specifically, what is its input, and what is its output and side effects?
+
+A: parse_args() takes as input four things: 1) buffer, a pointer to a buffer that holds a string of command line arguments as entered normally by a user, separated by spaces.  2) args, a pointer to an array of pointers to strings, 3) the maximum size of args (args_size), and 4) a pointer to an int for storing how many arguments were found in buffer.
+
+parse_args() modifies args so each element points to a command-line argument in buffer.  These arguments are terminated by null bytes, not whitespace.
+
+buffer is modified so that the single string is now a set of null-terminated strings.
+
+nargs is updated to have the number of arguments found.
+
+9. [1] Why does interaction with 3000shell often gets "messed up" when running programs in the background with &?
+
+A: It gets messed up because the background process and 300shell are both sending output to the terminal.  Their output thus gets interleaved, and it is possible for the background process to change the terminal settings making it difficult to interact with 3000shell.
+
+10. [2] What system calls are used to list all the files in a directory?  What are the library calls that are normally used to make those system calls?
+
+A: Use open to open the directory (via the opendir library call), getdents (via the readdir library call) to read entries, and close (via the closedir library call) to close the directory's file descriptor.
+
+11. [1] What happens when you delete line 293 (the call to wait())?  Why?
+
+A: When you delete this line 3000shell you get a prompt immediately rather than after the process finishes.  In effect, it now runs everything in the "background."  This happens because the wait call is what makes the shell wait for a process to finish.
+
+12. [2] What happens to an in-progress system call when a process receives a signal?  (An example is a program waiting for input from a terminal with a blocking <tt>read</tt> call.)  What does "restarting" a system call have to do with this?
+
+A: By default, a signal interrupts and cancels and currently running system calls.  If you set SA_RESTART, however, the system call will be restarted, meaning that the system call will continue as if the signal hadn't happened.
+
+13. [2] Describe how you could add input redirection for external programs to 3000shell.
+
+A: To add input redirection, in the child process (the else after the fork):
+ * open the file for input
+ * use dup2 to copy the file descriptor it to standard input (fd 0)
+ * edit the argument list to remove the < and the filename
+ * do execve as before
+
+Scoring: half point for where to put the code, the open, the dup, and the argument list edit.

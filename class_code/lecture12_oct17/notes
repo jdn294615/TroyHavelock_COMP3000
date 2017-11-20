@@ -1,0 +1,108 @@
+Todays topics:
+
+* segmentation
+* inode fields
+* page table entries
+* scheduling
+
+paging, blocks - fixed sized memory allocations
+    - typically 4K or 8K (can have some huge ones)
+    
+paging only works well if you have MMU
+    - need page tables, TLB
+    - do "table lookup" on every memory access
+    
+How do you manage memory without paging?
+
+* put everything at a fixed place in memory
+    - useful if you have very little RAM
+    
+* put code, data into "segments"
+    - semantic units of memory (stack, heap, "text")
+    - still use this terminology when referring to parts of a binary program
+
+Segments:
+* a segment is a variable-sized block of memory
+* base: starting address
+* bound: how long is it
+
+Key idea is segments can be placed in different parts of the address space
+    - to move, you just change the base
+    - code inside a segment refers to rest of segment via offsets
+    - on each memory access, CPU adds segment register to offset to get physical address
+    - having a base address with offsets is still used in userspace
+    
+16-bit x86 (8086) is a segmented architecture
+    - memory accesses are mostly relative to a segment base address
+    
+standard modes for 32-bit x86 (80386+) and 64-bit x86 (amd64) is "flat"
+    - segmented memory can be a pain because it can "wrap around" - going past the last address can put you in the first, or it just gives you an error
+    
+    
+inode fields
+------------
+
+    - stat, lstat gives details on an inode
+    - inodes allow access to contents of files and have the key metadata
+        - size
+        - "mode" - rwx, others
+        - owner, group
+        
+Users, groups
+-------------
+
+users and groups are used to restrict access
+    - each file has a user and group associated with it, permissions
+    - each process has a user and group
+    
+What if file ownership/permissions are "wrong"?
+
+In UNIX, the "root" user has all power
+    - can bypass all permission checks
+    - (unless you are on a mandatory access control system such as seLinux)
+    - VERY DANGEROUS
+    
+(Equivalent to an administrator account on Windows)
+
+
+/etc/passwd - holds all the passwords
+
+/etc/shadow - holds all the password hashes
+
+
+Page table entries
+------------------
+
+page tables are "table" (really very wide trees) of page table entries
+
+page table entries contain the top bits of the physical address along with metadata:
+    - readable?
+    - writable?
+    - executable?
+    
+most pages are either r+x (code) or r+w (data)
+
+    - valid?
+    - dirty?
+        - is data in page different from data on disk?
+        
+other bits to help with deciding what pages to keep in RAM or not
+
+    - e.g., when was it last accessed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

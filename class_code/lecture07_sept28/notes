@@ -1,0 +1,21 @@
+Lecture 07: filesystems
+-----------------------
+
+What is a file?
+    key->value pair
+    key:    heirarchical filename (pathname)
+    value:  arbitrary number of bytes
+
+In principal, you can use files to store very small values
+    - most filesystems have a minimum file size of at least 1K, often 4K or more
+    - one byte of data wastes a lot of space
+
+A set of files "stored" together, sharing a common hierarchical root, is a filesystem
+
+    - no storage for virtual filesystems such as /proc and /sys
+
+When you first start a UNIX system, you start with the "root" filesystem
+    - but other filesystem can be put on top by "mount"-ing them
+
+Traditional filesystems are stored in block devices
+    - but a filesystem can be anything that provides...
