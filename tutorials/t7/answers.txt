@@ -1,0 +1,17 @@
+=====================================
+COMP3000
+Tutorial 7
+Troy Havelock
+=====================================
+
+    1.  I see errors if I try to remove anything because it is a read only filesystem. It looks
+        like memoryll.py outputs system calls.
+
+    2.  When I make files in mnt/ it looks like they are regular files, but any file that is
+        created cannot be deleted.
+
+    3.  You need user permisions to mount and root permisions to umount
+
+    4.  The files are lost and you can't get them back.
+
+    5.  

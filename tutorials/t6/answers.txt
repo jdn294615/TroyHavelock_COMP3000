@@ -1,0 +1,9 @@
+COMP3000
+Tutorial 6
+Troy Havelock
+
+    1.  run make, then run: sudo insmod newgetpid.ko
+
+    2.  current is of type struct task_struct. I found this out by tracing through the linux kernel source code.
+
+    3.  

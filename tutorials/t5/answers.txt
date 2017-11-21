@@ -1,0 +1,48 @@
+==========================================================================================================
+    COMP3000
+    Tutorial 5
+    Troy Havelock
+    100964083
+==========================================================================================================
+
+Part 1:
+
+    1. The numbers appearing in the left column are the inode numbers
+
+    2. The file takes up 262144 blocks. The file takes up 256M of disk space
+
+    3. The file takes up less blocks but the same amount of disk space
+
+    4. dumpe2fs prints the super block and blocks group information for the filesystem present on device
+
+    5. The command that you would use would be fsck.<FILESYSTEM FORMAT> (e.g. fsck.ext4)
+
+    6. There is now a lost+found/ directory in /mnt
+
+    7. The filesystem /dev/loop0 is mounted on /mnt. I would assume this device is from /dev/zero which
+       we datat dumped into foo in question 2.
+
+    8. Rsync copies files either to or from a remote host, or locally on the current host (it does 
+       not support copying files between two remote hosts). The -a option means archive mode, and the
+       -v option means verbosely. The /etc option is the source directory and the /mnt is the destination
+       directory.
+
+    9. I cannot access the lost+found/ dir in /mnt anymore
+
+    10. Converts the file as per the parameters passed to it. The notrunc means do not truncate the output 
+        file
+
+    11. The error specifies that the structure needs cleaning.
+
+    12. I can run fsck.ext4 to make this work. It is part of the ext2/ext3/ext4 family of file systems so
+        this is why it works.
+
+    13.
+
+Part 2 - simple kernel module:
+
+    2. You can view the kernel logs by typing: tail /var/log/syslog
+
+    3. lsmod shows the status of modules in the Linux Kernel
+
+    4. 

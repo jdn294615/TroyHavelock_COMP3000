@@ -1,0 +1,96 @@
+---------------------
+COMP3000
+Lecture 18
+Troy Havelock
+---------------------
+
+* How can you recover a filesystem?
+* How do you delete a file?
+
+A filesystem is:
+    - persistent data structure
+    - stored in fixed-sized blocks (at least 512 bytes in size)
+    - maps hierarchical filenames to file contents
+    - has metadata about files (somehow)
+
+What's in a filesystem?
+    - data blocks
+        - blocks where you store the file content
+    - metadata blocks
+
+How do you organize metadata?
+
+First job: identify basic characteristics of the filesystem
+
+You need a "summary" block that tells you about everything else
+    -> this is the "superblock"
+
+Normally the superblock is the first block of the filesystem
+
+In the superblock
+    - what kind of filesystem is this?
+        - what filesystem magic number is there
+    - how big is the filesystem
+    - how is it organized
+    - where can I find the rest of the metadata?
+
+For POSIX filesystems
+    - file metadata is stored in ... inodes
+    - most have pre-reserved inodes
+
+So we have
+    - superblock
+    - inode blocks
+    - data blocks
+        - data blocks for directories
+        - data blocks for files
+
+How do you recover from damage?
+    - filesystems never "reboot", must remain correct over the course of years
+    - but errors will happen
+        - bitrot
+        - "accidental" corruption
+        - computer failure/memory corruption/hard reboot
+
+To make filesystems fast, data & metadata is cached in RAM
+    - bad things happen if this data hasn't been written to disk and you reboot
+    - even worse things happen if your RAM is bad and corrupts the data
+
+Also bad ... what if we lose the superblock?
+    - you could lose EVERYTHING
+    - so we have backup superblocks
+
+Old scandisk/fsck was slow because they had to scan all filesystem metadata
+    - not to recover data, but to fix metadata
+
+Nowadays fsck is very fast and we rarely lose data due to losing power
+    - we must be writing data to disk all the time
+    - but isn't witing all the time slow?
+
+On magnetic hard disks (not SSDs)
+    - sequential operations are fast
+    - random access is slow
+        - we have to move the read/write head
+
+So, on modern systems we update metadata (and sometimes data) by writing sequentially 
+to disk ... and then later writing randomly
+    - sequentil writes go to the "journal"
+
+On fsck on a journaled filesystem
+    - just check the journal for pending operations (replaying the journal)
+
+There exists filesystems that are pure journal
+    - log-based filesystem
+
+Logs and journal inherently create multiple copies of data and metadata that are hard 
+to track. This makes deletion nearly impossible (at least to guarantee)
+
+Only way to guarantee...encrypt everything
+    - if every file has its own key, you can delete the key and thus "delete" the data
+
+Solid State Disks (SSD) use log-structured storage at a level below blocks
+    - writes are coarse-grained (you have to write a lot at once)
+    - you don't want to write to the same cells too often, they'll die
+        - have to do "wear-leveling"
+
+

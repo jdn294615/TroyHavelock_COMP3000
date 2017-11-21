@@ -1,0 +1,43 @@
+Lecture 15
+----------
+
+What's a filesystem?
+    - persistent data structure organized around fixed allocation units (blocks)
+    - maps hierarchical names (keys) to values
+    - provide a file-like API (open, read, write, close, etc.)
+
+What does it mean to "make" a filesystem?
+    - initializing the datat structure
+    - "formatting" a disk
+
+Physical versus logical size of a file
+    - logical: the "size" your program sees when accessing the file
+    - physical: how much space the file takes up on disk
+
+Physical is in terms of blocks - fixed units of storage allocation
+    - ext4 has 4k blocks
+    - default for many command line utilities is 1k blocks
+
+Kernel programming
+    - you may destroy the system you are working on AT ANY TIME
+    - HAVE GOOD BACKUPS
+    - rsync is your friend
+
+Kernel modules
+    - way of splitting up kernel functionality so everything doesn't have to load at boot
+        - code loaded as part of the initial boot image is hard to get rid of at runtime
+    - why do we need modules? why not processes?
+        - no new mechanisms
+        - increased security (restricted access)
+        - "microkernel" approach
+        - instead of code talking in supervisor mode, processes do IPC
+            - filesystems
+            - drivers
+            - networking
+        - minix, QNX, GNU hurd
+    - Linux is a "monolithic" kernel. Why?
+        - performance: context switches are expensive
+            - techniques to make microkernels fast can be adopted by monolithic kernels to 
+              make them even faster
+        - security benefit is illusory
+            - if you control the filesystem process, you already own everything

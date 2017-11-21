@@ -1,0 +1,1 @@
+cmd_/home/ubuntu/COMP3000/lectures/nov_09/newgetpid/newgetpid.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/ubuntu/COMP3000/lectures/nov_09/newgetpid/newgetpid.ko /home/ubuntu/COMP3000/lectures/nov_09/newgetpid/newgetpid.o /home/ubuntu/COMP3000/lectures/nov_09/newgetpid/newgetpid.mod.o

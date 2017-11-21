@@ -1,0 +1,84 @@
+**********************************
+COMP3000
+Novemeber 14, Lecture 17 Notes
+**********************************
+
+How do you do kernel hacking?
+    - Be humble
+        - you don't know how everything works, and nobody else does
+
+    - Verify your assumptions as you go
+        - perform lots of experiments
+        - incremental development
+
+    - Check for errors ALWAYS
+        - will save you from later errors
+        - kernel has to "live cleanly"
+
+    - Find another part of the kernel that is close to what you want to do. Read that
+      code and use their approach where possible
+        - You don't understand all the abstractions and assumptions, so "pattern match"
+          to minimize trouble
+        - Realize that the assumptions behind code you find don't necessarily match 
+          your own
+
+    - Understand the "flow of control" inside the program
+        - architecture
+        - division of responsibilities
+        - purpose of data structures/objects
+
+Scheduling
+----------
+
+How does the kernel maintain control?
+    - CPU is given entirely to userpace processes to run most of the time
+
+Kernel needs to run when it needs to run
+    - and no process should be able to stop it
+
+* The Interupt Table *
+    - pointers to code the the CPU runs when it receives different hardware or
+      software interrupts
+    - since the kernel runs first, it gets to set the interrupt table
+    - only supervisor code can change the table, not user code
+
+So when the ethernet card receives data...
+    - the ethernet card sends an interrupt to the kernel
+    - the CPU calls the kernel code for handling the ethernet data
+
+When the clock generates a timer interrupt...
+    - the CPU calls the kernel code for handling timer interrupts
+
+In order to process an interupt, a CPU core has to be taken over
+    - that core was probably running a userspace process
+
+Scheduling is all about what to do after having kicked a userspace process
+off of a core
+
+Normally on a core:
+    - userspace process is running
+    - interupt happens
+    - core switches to supervisor mode, runs kernel code
+    - last part of kernel code is scheduler, chooses which userpace code to run
+    - goto top ^^
+
+Kernel is entered via interrupts, exited via the scheduler
+
+Entry and exit to the kernel has to do a low-level task like changing CPU modes,
+manage CPU registers
+    - must be written in assembly
+
+Most OS kernels minimize this low-level code
+
+What criteria should the scheduler use in deciding what to run?
+    - "fairness"
+        - prevent starvation
+        - absent other conditions, equal allocation of resources
+    - bias resources towards "foreground" tasks in interactive systems
+        - never biased enough
+        - always hacks, heuristics
+
+Memory overcommitment
+    - it is possible to allocate way more memory than can be ever used
+    - goes into "memory debt"
+ 
