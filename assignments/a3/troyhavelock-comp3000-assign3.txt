@@ -1,0 +1,11 @@
+COMP 3000 Assignment 3
+Troy Havelock
+100964083
+November 26, 2017
+
+=========================================================
+ANSWERS:
+
+    1.  The first block in a filesystem is the superblock, which stores much of the information and metadata
+        about the filesystem. Luckily there are backup superblocks stored at set intervals in the filesystem.
+         
