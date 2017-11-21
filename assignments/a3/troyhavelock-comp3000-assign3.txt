@@ -8,4 +8,18 @@ ANSWERS:
 
     1.  The first block in a filesystem is the superblock, which stores much of the information and metadata
         about the filesystem. Luckily there are backup superblocks stored at set intervals in the filesystem.
-         
+            
+            References: November 16 lecture notes
+
+    2.  There are a few reasons why a filesystem could not be unmounted (assuming the requesting user has
+        sufficient privileges). Most importantly, a filesystem cannot be umounted when it is 'busy'. What
+        this means is that there are open files on it, a process has its working directory on it, or there is
+        a swap file on the filesystem that is in use.
+
+            References: umount man page
+
+**    3.  The standard C library is a userpace API. So it is not defined in kernel space memory. Therefore it
+        cannot access the standard C library. It can only access APIs that are already defined inside the 
+        kernel
+
+            References: https://en.wikipedia.org/wiki/User_space, November 7 lecture notes
