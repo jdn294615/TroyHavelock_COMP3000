@@ -1,0 +1,1 @@
+cmd_/home/troyhavelock/COMP3000/lectures/nov_21/newgetpid/newgetpid.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/troyhavelock/COMP3000/lectures/nov_21/newgetpid/newgetpid.ko /home/troyhavelock/COMP3000/lectures/nov_21/newgetpid/newgetpid.o /home/troyhavelock/COMP3000/lectures/nov_21/newgetpid/newgetpid.mod.o

@@ -1,0 +1,22 @@
+-----------------------
+November 21, 2017
+COMP 3000 
+Troy Havelock
+100964083
+-----------------------
+
+Where's Main?
+    - lots of programs have "main" functions - a function that runs first and controls the execution of 
+      the program
+    - do these have "main" functions? In what sense?
+        - Linux kernel modules
+        - FUSE applications?
+        - the Linux kernel?
+        - node web applications?
+
+In many systems, "main" just sets up event handlers
+    - the event loop can be implicit or explicit
+        - or there may be no loop at all, just handlers and "interrupts" of some kind
+    - event loops poll (check) to see when there are new events
+
+OS kernels are essentially the same thing
