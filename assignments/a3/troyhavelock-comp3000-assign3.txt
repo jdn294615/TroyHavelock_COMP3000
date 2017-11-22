@@ -23,3 +23,16 @@ ANSWERS:
         kernel
 
             References: https://en.wikipedia.org/wiki/User_space, November 7 lecture notes
+
+    4.  The effective user id (euid) of a process is used for permision checks. The uid is not always equal
+        to the euid because the uid will be that of the user invoking the process, and the euid will be the
+        id of owner of the process.
+
+            References: https://en.wikipedia.org/wiki/User_identifier, https://unix.stackexchange.com/questions/391265/can-bash-run-with-uid-0-and-different-euid
+
+    5.  No we are not creating a new process when we load a kernel module. As with program there is something
+        that must run at the beginning, but with kernel modules the part that runs when it is loaded simply
+        sets up handlers and "interrupts" that will execute code under certain conditions or when called
+        upon.
+
+            References: November 21 lecture notes
