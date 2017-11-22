@@ -20,7 +20,7 @@ ANSWERS:
 
 **    3.  The standard C library is a userpace API. So it is not defined in kernel space memory. Therefore it
         cannot access the standard C library. It can only access APIs that are already defined inside the 
-        kernel
+        kernel.
 
             References: https://en.wikipedia.org/wiki/User_space, November 7 lecture notes
 
@@ -37,12 +37,18 @@ ANSWERS:
 
             References: November 21 lecture notes
 
-    6.
+    6.  Yes, a linux system that is generating multiple "Oops" messages is at risk of doing something bad. An
+        oops messageis generated when when the kernel detects a problem and kills any offending process. When
+        a system has encountered an "oops" message, some internal resources may be broken or not work the same.
+        One or multiple "oops" messages could lead to a kernel panic when the system attempts to use 
+        resources that have been corrupted or lost.
+
+            Resources: https://en.wikipedia.org/wiki/Linux_kernel_oops
 
     7.  newgetpid.c is a kernel module which, when loaded, exists in kernel space. put_user() has the ability 
         to write a simple value into user space. This is how the kernel module is able to write to buf.
 
-            References: http://elixir.free-electrons.com/linux/v4.4.83/source/arch/x86/include/asm/uaccess.h#L257
+            References: Linux source code
 
     8.  Since a filesystems physical size is allocated in blocks (ex. ext4 filesystems have 4K blocks), a
         filesystem can have a smaller logical size than its physical size if the data stored in the
@@ -54,4 +60,24 @@ ANSWERS:
 
             References: November 7 lecture notes
 
-    9.  
+    9.  Current is a macro for the get_current() function. The get_current() function returns a pointer to a 
+        task_struct, so current points to a task_struct. current points to the current process, the one that
+        sent the system call.
+        
+            References: Tutorial 6, Linux source code
+
+    10. On line 89, register_chrdev() creates and registers a cdev occupying a range of minors. This line 
+        does not actually name the file that will show up in /dev/. On line 105, there is a call to 
+        device_create() which will actually set the name of the device file that shows up in /dev/. This
+        is the call that creates the device file. Both those function calls use the macro DEVICE_NAME which
+        is defined on line 22 and contains the string value for the device name "newgetpid". So you can
+        simply change this string to change the name of the device file. I verfied this using the linux
+        source code and during Tutorial 6.
+
+            References: Tutorial 6, Linux source code
+
+    11. Currently newgetpid.c has no .write handler so that would need to be added to the file_operations
+        struct on line 71. There would then need to be a write handler similar to that of newgetpid_read
+        called newgetpid_write. This function would then be able to handle write operations.
+
+            References: Tutorial 6
