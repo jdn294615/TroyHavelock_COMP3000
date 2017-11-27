@@ -1,0 +1,20 @@
+*****************************
+*   COMP 3000               *
+*   Tutorial 8              *
+*   Troy Havelock           *
+*****************************
+
+    1.  The hard link count is the same wether I look at it locally or through sshfs
+
+    2.  No I cannot access sshfs files as root. It appears that the filesystem is not mounted
+        when I try to access it from the root user.
+
+    3.  The inode numbers are very different. Where the filesystem is mounted (over sshfs) the
+        inode is very small for test.txt (7), and on the local files have a very high inode
+        number. This makes sense because on the mounted filesystem, the inode only refers to
+        what is mounted, not the entire system.
+
+    4.  It is faster to data dump to a local drive. In this case a large file that I used was
+        about 450 Mb.
+
+    5.  
