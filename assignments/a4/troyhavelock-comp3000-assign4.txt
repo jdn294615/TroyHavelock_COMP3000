@@ -1,0 +1,21 @@
+COMP 3000 Assignment 3
+Troy Havelock
+100964083
+November 26, 2017
+
+=========================================================
+ANSWERS:
+
+    1.  The 2 inode values are different. The sshfs inode will be significantly smaller because
+        it is relative to the mounted filesystem. The local inode will be much larger because
+        it is relative to the local filesystem.
+
+    2.  In the init method, the object sets the initial ino number 1 on line 18. Any time there
+        is a call to create_ino() method, defined on line 13-15, the method increments the
+        current inode number and returns it to the calling function.
+
+    3.  The files UID and GID values come from the remote server. I verified this by running
+        stat --format=%U%G a local file and an sshfs file and the values for the GID and UID
+        were the same on both, implying they belong to the remote server.
+
+    4.  
